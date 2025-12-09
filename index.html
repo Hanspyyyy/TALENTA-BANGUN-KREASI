@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Talenta bangun kreasi</title>
+    <title>TALENTA BANGUN KREASI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -14,11 +14,19 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            
+            /* REVISI GLOBAL: SEMBUNYIKAN SCROLLBAR DI SEMUA ELEMEN (TERMASUK MOBILE) */
+            -ms-overflow-style: none !important;  
+            scrollbar-width: none !important;
+        }
+        *::-webkit-scrollbar {
+            display: none !important;
         }
 
         body {
             font-family: sans-serif; 
             background-color: #0d0e14; 
+            /* REVISI: KUNCI SCROLL GLOBAL DI BODY (DEFAULT DESKTOP) */
             overflow-y: hidden; 
         }
 
@@ -36,7 +44,8 @@
 
         .page-section {
             width: 100vw; 
-            min-height: 100vh; 
+            /* KUNCI TINGGI SELALU 100% LAYAR DI SEMUA KONDISI (DEFAULT DESKTOP) */
+            height: 100vh; 
             flex-shrink: 0; 
             
             position: absolute; 
@@ -48,13 +57,27 @@
             display: block; 
             padding: 50px 5%; 
             color: white;
-            overflow-y: auto; 
+            /* KUNCI SECTION DARI SCROLL (SCROLL DIBERIKAN KE DIV DI DALAMNYA) */
+            overflow-y: hidden; 
+        }
+
+        /* ==================================== */
+        /* === SCROLL INTERNAL CONTAINER === */
+        /* ==================================== */
+        .scrollable-content {
+            /* Tinggi konten maksimal 100% layar dikurangi padding section atas/bawah */
+            height: calc(100vh - 100px); 
+            overflow-y: auto; /* INI YANG AKAN SCROLL */
+            padding-bottom: 50px; /* Tambahkan sedikit padding di bagian bawah scrollable */
+            /* Pastikan konten di dalamnya tidak keluar dari batas */
+            width: 100%;
         }
 
         #home {
             transform: translateX(0);
-            /* Memastikan Home sama sekali tidak bisa di-scroll vertikal di Desktop */
+            /* DI DESKTOP TETAP HIDDEN */
             overflow-y: hidden !important; 
+            overflow: hidden !important; 
         }
 
         /* --- Hero Section (Desktop) --- */
@@ -79,6 +102,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Ganti dengan URL gambar Anda */
             background-image: url('images/background-image.jpg'); 
             background-size: cover;
             background-position: center;
@@ -131,7 +155,7 @@
             display: block;
         }
         
-        .main-tagline h2 { font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+        .main-tagline h2 { font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
         .highlight { color: red; }
         .main-tagline p { font-size: 1rem; line-height: 1.6; margin-bottom: 40px; color: #ccc; max-width: 80%; }
         .project-button { display: flex; align-items: center; gap: 15px; cursor: pointer; transition: color 0.3s; }
@@ -140,6 +164,7 @@
 
         .hero-avatar {
             position: absolute; top: 0; right: 0; width: 50%; height: 100%; z-index: 2; 
+            /* Ganti dengan URL gambar Anda */
             background-image: url('images/avatar.png'); background-size: contain; background-repeat: no-repeat; 
             background-position: right center;
         }
@@ -162,21 +187,26 @@
         section h2 { text-align: center; margin-bottom: 30px; padding-top: 50px; font-size: 2.5rem; }
         .dummy-content { width: 80%; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; background-color: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
 
+        /* --- KEYFRAMES UNTUK AUTO-SCROLL --- */
+        @keyframes autoScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-540px); 
+            }
+        }
 
         /* --- PROJECT SHOWCASE SLIDER CSS --- */
         .project-showcase {
             margin-top: 0; 
             width: 40%; 
-            
-            /* REVISI: Pastikan scroll horizontal aktif */
             overflow-x: auto; 
-            
             padding-bottom: 20px; 
-            
             position: relative;
+            min-width: 0;
             mask-image: linear-gradient(to right, 
                 transparent 0%, black 5%, black 95%, transparent 100%);
-            /* Hapus flex-shrink di sini (di mode desktop/global) */
         }
 
         .project-list-wrapper {
@@ -184,9 +214,14 @@
             gap: 20px;
             padding: 10px 0;
             width: max-content; 
-            min-width: 100%; /* PENGAMAN */
+            min-width: 100%; 
+            animation: autoScroll 15s linear infinite alternate;
         }
 
+        .project-showcase:hover .project-list-wrapper {
+            animation-play-state: paused;
+        }
+        
         .project-item {
             width: 250px; 
             height: 150px; 
@@ -195,66 +230,196 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s ease;
             cursor: grab;
-            flex-shrink: 0; /* Penting agar item tidak mengecil di dalam wrapper */
+            flex-shrink: 0; 
         }
 
-        /* Sembunyikan Scrollbar */
-        .project-showcase::-webkit-scrollbar {
-            display: none;
+        /* ==================================== */
+        /* === BACKGROUND GRADIENT ABOUT ME === */
+        /* ==================================== */
+        #about {
+            background: linear-gradient(135deg, #1f2733 0%, #0d0e14 100%);
         }
-        .project-showcase {
-            -ms-overflow-style: none;  
-            scrollbar-width: none;  
+        
+        /* Tambahan styling untuk About Section (Owner info) */
+        .about-content-intro {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 50px;
         }
 
+        .owner-photo-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, red, #ff4c4c);
+            padding: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .owner-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-image: url('images/owner-photo.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-color: #1f2733;
+            transition: transform 0.5s ease;
+        }
+        .owner-info {
+            max-width: 60%;
+        }
+        .owner-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .owner-info p {
+            color: red;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .typing-text {
+            border-right: 3px solid white; 
+            white-space: pre-wrap;
+            overflow: hidden;
+        }
+                /* ======================
+            STYLING SERVICES
+        ====================== */
+        #services {
+            background: #36393f;
+            padding: 40px;
+            color: #fff;
+        }
+
+        #services h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #services .dummy-content {
+            background: #444;
+            padding: 15px 20px;
+            margin: 12px auto;
+            width: 80%;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        /* Efek hover (opsional biar lebih modern) */
+        #services .dummy-content:hover {
+            transform: translateX(10px);
+            background: #50545a;
+        }
 
         /* ==================================== */
         /* === MEDIA QUERY (Mode HP / Mobile) === */
         /* ==================================== */
         @media (max-width: 768px) {
             
-            /* --- Navigasi Bawah (Mobile) --- */
+            /* --- PERBAIKAN 1: SCROLL HOME DI MOBILE --- */
+            
+            /* Biarkan BODY bisa di-scroll di Mobile agar konten Home/section lain bisa mengalir */
+            body {
+                overflow-y: auto !important; 
+            }
+            
+            /* Hapus KUNCI 100vh di mobile, agar section menyesuaikan konten */
+            .page-section {
+                height: auto; 
+                min-height: 100vh; /* Tapi minimal 100vh agar layar full di awal */
+                position: relative !important; /* Di Mobile, Section harus relatif agar bisa di-scroll oleh body */
+                overflow-y: visible !important; /* Biarkan konten scroll */
+                
+                /* Tambahkan padding bawah agar tidak tertutup nav */
+                padding-bottom: 80px; 
+            }
+            
+            /* Karena .page-section sudah dibuat relatif, kita matikan transisi slide di mobile */
+            .page-section {
+                transform: translateX(0) !important;
+                transition: none !important; /* Matikan transisi agar tidak sliding aneh-aneh */
+                display: none; /* Sembunyikan section yang tidak aktif */
+            }
+            
+            /* Pastikan hanya section yang aktif yang ditampilkan */
+            .page-section.active {
+                display: block; 
+            }
+
+            /* Hapus perhitungan tinggi di scrollable-content di mobile agar konten mengalir */
+            .scrollable-content {
+                height: auto !important; 
+                overflow-y: visible !important; 
+            }
+            
+            /* --- END PERBAIKAN 1 --- */
+
+            
+            /* --- PERBAIKAN 2 & 3: NAVIGASI BAWAH RAPI & IKON SOSIAL --- */
             .side-nav {
+                /* REVISI UTAMA: Dibuat FIXED, FULL LEBAR, dan menempel di bawah */
                 top: auto; 
                 bottom: 0; 
                 right: 0;
                 left: 0;
                 transform: none; 
                 width: 100%; 
-                border-radius: 0; 
+                border-radius: 20; /* Hapus radius agar menyatu dengan batas layar */
                 padding: 10px 0;
                 box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); 
+                height: 50px; 
+                position: fixed; 
+                z-index: 999;
+                /* Hapus background dan filter agar bersih seperti contoh image Anda */
+                background-color: rgba(255, 255, 255, 0.05); /* Kembalikan sedikit transparan */
+                backdrop-filter: blur(5px);
             }
-
+            
             .side-nav ul { 
                 flex-direction: row; 
                 justify-content: space-around; 
+                gap: 0; /* Hapus gap agar ikon sejajar rapi */
+            }
+            
+            .side-nav li a {
+                padding: 5px 10px; /* Sesuaikan padding agar ikon terlihat lebih baik */
+                font-size: 1.5rem; /* Perbesar sedikit ukuran ikon */
             }
 
-            /* --- Konten Utama (Mobile: Tetap Horizontal/Slide) --- */
-            .page-section {
-                padding-bottom: 80px; 
-                overflow-y: auto !important; /* Aktifkan scroll di semua section di Mobile */
+            /* IKON SOSIAL (Sudah disesuaikan di revisi sebelumnya) */
+            .social-nav {
+                top: 15px;
+                right: 30px; 
             }
-            
-            /* REVISI MOBILE: Home bisa di-scroll, tapi konten dalam hero-content disesuaikan */
-            #home {
-                overflow-y: auto !important; 
-            }
-            
+
+            /* --- Mobile Layout Styling Lain --- */
             .hero-section {
                 flex-direction: column;
                 justify-content: flex-start;
                 text-align: center;
+                min-height: 100vh; 
             }
             
+            .hero-avatar {
+                display: none;
+            }
+
             .hero-content {
                 max-width: 100%;
                 padding: 50px 5%; 
                 order: 2; 
             }
             
-            /* REVISI MOBILE: Wadah side-by-side jadi stack */
             .hero-main-content {
                 flex-direction: column;
                 gap: 20px;
@@ -263,16 +428,34 @@
             .main-tagline { 
                 width: 100%; 
             }
+            
+            .main-tagline h2 { font-size: 2.5rem; }
+            .main-tagline p { max-width: 100%; }
+            .project-button { justify-content: center; }
 
-            /* REVISI MOBILE: Project Showcase Kembali ke margin atas */
             .project-showcase {
                 margin-top: 20px; 
                 width: 100%; 
                 padding-left: 5%; 
                 padding-right: 5%;
-                
-                /* Di mobile, scroll horizontal project tetap aktif */
                 overflow-x: auto; 
+            }
+            
+            .project-showcase .project-list-wrapper {
+                animation: none;
+            }
+            
+            .about-content-intro {
+                flex-direction: column;
+                gap: 20px;
+                width: 100%;
+            }
+            .owner-info {
+                max-width: 100%;
+                text-align: center;
+            }
+            .dummy-content {
+                width: 100%;
             }
         }
     </style>
@@ -292,21 +475,19 @@
     
     <div class="content-wrapper">
         
-        <header id="home" class="page-section hero-section" style="background-color: #0d0e14;">
+        <header id="home" class="page-section hero-section active" style="background-color: #0d0e14;">
             <div class="overlay"></div>
             <div class="hero-content">
-                <img src="images/logo-placeholder.png" alt="Ethan Smith Logo" class="logo-image">
-                
+                <img src="images/logo-placeholder.png" alt="POTO LOGO TALNETA" class="logo-image">
                 <div class="hero-main-content">
                     <div class="main-tagline">
-                        <h2>Talenta  <span class="highlight">Bangun Kreasi</span></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate, exercitationem harum, quia nulla temporibus deleniti libero veniam vero beatae numquam ducimus illum ab similique ipsam tempore fugit quod laudantium debitis.</p>
+                        <h2>TALENTA BANGUN KREASI<span class="highlight">  Properti, Purnitur,</span></h2>
+                        <p>Prusahaan ini bergerak pada fokus............................................................................................................................. .</p>
                         <div class="project-button">
                             <span class="circle">My Projects</span>
                             <i class="fas fa-arrow-right"></i>
                         </div>
                     </div>
-                    
                     <div class="project-showcase">
                         <div class="project-list-wrapper">
                             <img src="images/project-1.png" alt="Project 1" class="project-item">
@@ -317,7 +498,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
             <div class="hero-avatar"></div>
             <div class="social-nav">
                 <a href="#"><i class="fab fa-instagram"></i></a>
@@ -329,63 +510,77 @@
         </header>
 
         <section id="about" class="page-section">
-            <h2>About Me</h2>
-            
-            <div class="about-content-intro">
-                <div id="owner-photo" class="owner-photo-container">
-                    <div class="owner-photo"></div>
-                </div>
+            <div class="scrollable-content">
+                <h2>About Me</h2>
                 
-                <div class="owner-info">
-                    <h3>Halo, Saya [Nama CEO]</h3>
-                    <p>CEO & Founder di [Nama Brand/Perusahaan]</p>
+                <div class="about-content-intro">
+                    <div id="owner-photo" class="owner-photo-container">
+                        <div class="owner-photo"></div>
+                    </div>
                     
-                    <div id="typing-output" class="typing-text"></div>
+                    <div class="owner-info">
+                        <h3>Halo, Saya [Nama CEO]</h3>
+                        <p>CEO & Founder di [Nama Brand/Perusahaan]</p>
+                        <div id="typing-output" class="typing-text"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="dummy-content" style="width: 80%; margin-top: 50px;">
-                <h3 style="color: red; margin-bottom: 15px;">Talenta Lahir... (Sejarah PT)</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, voluptas. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
-                <br>
-                <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem.</p>
-                <br>
-                <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
-                <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
-                <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
-                <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                <div class="dummy-content" style="width: 80%; margin: 50px auto 20px auto;">
+                    <h3 style="color: red; margin-bottom: 15px;">Talenta Lahir... (Sejarah PT)</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, voluptas. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <br>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis. Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem.</p>
+                    <br>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                    <p>Quidem minima quo, vitae similique inventore velit, sint, esse eaque ad asperiores non autem. Quam vitae voluptatem minima? Aut, dolor! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, debitis.</p>
+                </div>
             </div>
         </section>
         
         <section id="services" class="page-section" style="background-color: #36393f;">
-            <h2>Services (Bisa di Scroll)</h2>
-            <p class="dummy-content">Layanan 1</p>
-            <p class="dummy-content">Layanan 2</p>
-            <p class="dummy-content">Layanan 3</p>
-            <p class="dummy-content">Layanan 4</p>
-            <p class="dummy-content">Layanan 5 (Konten yang panjang)</p>
-            <p class="dummy-content">Layanan 6</p>
-            <p class="dummy-content">Layanan 7</p>
-            <p class="dummy-content">Layanan 8</p>
-            <p class="dummy-content">Layanan 9</p>
+            <div class="scrollable-content">
+                <h2>Services (Bisa di Scroll)</h2>
+                <p class="dummy-content">Layanan 1</p>
+                <p class="dummy-content">Layanan 2</p>
+                <p class="dummy-content">Layanan 3</p>
+                <p class="dummy-content">Layanan 4</p>
+                <p class="dummy-content">Layanan 5 (Konten yang panjang)</p>
+                <p class="dummy-content">Layanan 6</p>
+                <p class="dummy-content">Layanan 7</p>
+                <p class="dummy-content">Layanan 8</p>
+                <p class="dummy-content">Layanan 9</p>
+                <p class="dummy-content">Layanan 10</p>
+                <p class="dummy-content">Layanan 11</p>
+                <p class="dummy-content">Layanan 12</p>
+            </div>
         </section>
         
         <section id="portfolio" class="page-section" style="background-color: #2c2f33;">
-            <h2>Portfolio (Bisa di Scroll)</h2>
-            <p class="dummy-content">Proyek A</p>
-            <p class="dummy-content">Proyek B</p>
-            <p class="dummy-content">Proyek C</p>
+            <div class="scrollable-content">
+                <h2>Portfolio (Dikunci)</h2>
+                <p class="dummy-content">Proyek A</p>
+                <p class="dummy-content">Proyek B</p>
+                <p class="dummy-content">Proyek C</p>
+            </div>
         </section>
         
         <section id="blog" class="page-section" style="background-color: #36393f;">
-            <h2>Blog (Bisa di Scroll)</h2>
-            <p class="dummy-content">Postingan Terbaru 1</p>
-            <p class="dummy-content">Postingan Terbaru 2</p>
+            <div class="scrollable-content">
+                <h2>Blog (Dikunci)</h2>
+                <p class="dummy-content">Postingan Terbaru 1</p>
+                <p class="dummy-content">Postingan Terbaru 2</p>
+            </div>
         </section>
         
         <section id="contact" class="page-section" style="background-color: #2c2f33;">
-            <h2>Contact (Bisa di Scroll)</h2>
-            <p class="dummy-content">Hubungi kami melalui formulir di bawah ini.</p>
+            <div class="scrollable-content">
+                <h2>Contact (Dikunci)</h2>
+                <p class="dummy-content">Hubungi kami melalui formulir di bawah ini.</p>
+            </div>
         </section>
 
     </div> 
@@ -395,6 +590,8 @@
             const sections = document.querySelectorAll('.page-section');
             const sectionIds = Array.from(sections).map(section => section.id);
             
+            const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
             // --- FUNGSI UNTUK UI ABOUT ME ---
             const textToType = "Selamat datang! Saya [Nama CEO], CEO di [Nama Brand/Perusahaan]. Kami percaya bahwa inovasi adalah kunci digital. Kami siap membantu Anda mewujudkan visi digital Anda dengan solusi terbaik dan layanan yang transparan.";
             const typingOutputElement = document.getElementById('typing-output');
@@ -405,7 +602,7 @@
                 if (typingOutputElement && charIndex < textToType.length) {
                     typingOutputElement.innerHTML += textToType.charAt(charIndex);
                     charIndex++;
-                    setTimeout(typeWriter, 40); // Kecepatan mengetik
+                    setTimeout(typeWriter, 40); 
                 } else if (typingOutputElement) {
                     typingOutputElement.style.borderRight = 'none'; 
                 }
@@ -415,38 +612,60 @@
             // Fungsi utama untuk menggeser/mengubah tampilan section
             function goToSection(index) {
                 
-                // 1. Lakukan Transisi Horizontal TERLEBIH DAHULU
-                sections.forEach((section, i) => {
-                    if (i === index) {
-                        section.style.transform = 'translateX(0)';
-                    } else if (i < index) {
-                        section.style.transform = 'translateX(-100vw)';
-                    } else {
-                        section.style.transform = 'translateX(100vw)';
-                    }
-                });
+                // 1. Perbarui Kelas Active di Navigasi
+                navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+
+                const activeLink = document.querySelector(`.side-nav a[href="#${sectionIds[index]}"]`);
+                if (activeLink) {
+                    activeLink.parentElement.classList.add('active');
+                }
+                sections[index].classList.add('active');
                 
-                // 2. Tunda Reset Scroll (50 milidetik) + Logic Animasi
+                // Logika Mobile vs Desktop
+                if (isMobile()) {
+                    // *** LOGIKA MOBILE (Menggunakan display block/none dan scroll body) ***
+                    
+                    // Di mobile, hanya perlu memastikan section yang aktif muncul (section.active di CSS)
+                    
+                } else {
+                    // *** LOGIKA DESKTOP (Slide Horizontal) ***
+                    
+                    sections.forEach((section, i) => {
+                        // Pastikan display: block di desktop agar transisi terlihat
+                        section.style.display = 'block'; 
+                        
+                        if (i === index) {
+                            section.style.transform = 'translateX(0)';
+                        } else if (i < index) {
+                            section.style.transform = 'translateX(-100vw)';
+                        } else {
+                            section.style.transform = 'translateX(100vw)';
+                        }
+                    });
+                }
+                
+                // 2. Tunda Reset Scroll + Logic Animasi
                 setTimeout(() => {
-                    // Reset Scroll Jaminan (Masalah Windows)
+                    // Reset Scroll Jaminan (Untuk Body di Mobile/Desktop)
                     window.scrollTo(0, 0);
                     document.documentElement.scrollTop = 0; 
                     document.body.scrollTop = 0; 
                     
-                    // Reset Scroll Internal SEMUA Section
-                    sections.forEach(section => {
-                        section.scrollTop = 0;
-                        section.scrollLeft = 0; 
+                    // Reset Scroll Internal SEMUA Section (PENTING)
+                    document.querySelectorAll('.scrollable-content').forEach(content => {
+                        content.scrollTop = 0;
+                        content.scrollLeft = 0; 
                     });
 
                     // 3. Logic Animasi Foto dan Typing (Hanya di About)
                     if (sectionIds[index] === 'about') {
-                        // A. Animasi Foto (Fade In)
                         if (photoElement) {
-                            photoElement.classList.add('animate-in');
+                            photoElement.classList.remove('animate-in');
+                            setTimeout(() => {
+                                photoElement.classList.add('animate-in');
+                            }, 50); 
                         }
-
-                        // B. Efek Typing
                         charIndex = 0;
                         if (typingOutputElement) {
                             typingOutputElement.innerHTML = '';
@@ -455,19 +674,11 @@
                         }
                         
                     } else {
-                        // Reset animasi saat keluar dari About
                         if (photoElement) {
                             photoElement.classList.remove('animate-in');
                         }
                     }
-                }, 50); // Delay 50ms (Dipercepat)
-
-                // 4. Perbarui Kelas Active di Navigasi
-                navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-                const activeLink = document.querySelector(`.side-nav a[href="#${sectionIds[index]}"]`);
-                if (activeLink) {
-                    activeLink.parentElement.classList.add('active');
-                }
+                }, 50);
             }
 
             // Fungsi Klik
@@ -477,6 +688,18 @@
                     goToSection(index);
                 });
             });
+            
+            // Tambahkan event listener untuk resize. Ini penting agar logika desktop/mobile tidak kacau
+            window.addEventListener('resize', () => {
+                const activeIndex = Array.from(sections).findIndex(section => 
+                    document.querySelector(`.side-nav a[href="#${section.id}"]`).parentElement.classList.contains('active')
+                );
+                if (activeIndex !== -1) {
+                    // Cepat-cepat panggil goToSection ulang untuk menerapkan mode (slide atau scroll) yang benar
+                    setTimeout(() => goToSection(activeIndex), 100); 
+                }
+            });
+
 
             // Inisialisasi: Pastikan halaman pertama (index 0) aktif saat dimuat
             goToSection(0); 
